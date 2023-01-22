@@ -16,8 +16,11 @@ class Main2(object):
     def __init__(self, path):
         self.path = path
         self.pixels = []
+        self.pixels_b = [] #Pixeles a mandar al FrameWork.
         self.leer(path)
         #self.barrer()
+
+        FrameWork(self.pixels_b) # Creando el frame.
 
     def leer(self, path):
         
@@ -75,6 +78,24 @@ class Main2(object):
                 self.pixels[i].append(imagen.getpixel((j,i)))
                 # Imprimiendo la matriz.
                 #print(self.matrix[i][j], end=" ")
+
+        # Abrir una imagen
+        im = Image.open("res.bmp")
+
+        # Obtener los pixeles de la imagen
+        pixels = im.load()
+
+        # Obtener el ancho y alto de la imagen
+        width1, height1 = im.size
+
+        # Guardando los pixeles de la imagen en una matriz.
+        for i in range(width1):
+            self.pixels_b.append([])
+            for j in range(height1):
+                self.pixels_b[i].append(pixels[j,i])
+                # Imprimiendo la matriz.
+                #print(self.matrix[i][j], end=" ")
+
 
         # # Escribiendo la matriz en un archivo.
         # with open("matriz.txt", "w") as f:
