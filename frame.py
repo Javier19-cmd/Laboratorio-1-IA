@@ -32,6 +32,8 @@ class FrameWork(object):
 
         self.distancias = [] # Lista que almacenará las distancias entre los estados.
 
+        self.meta = () # Estado meta del agente.
+
         self.posf = () # Posición final del agente.
 
         self.action() # Definiendo las acciones que tomará el agente para llegar a la meta.
@@ -153,6 +155,7 @@ class FrameWork(object):
 
         #print(self.posiciones_verdes)
         #print("Posiciones negros: ", self.posiciones_negros)
+        #print(self.estado_inicial, self.posiciones_verdes)
 
         for i in range(len(self.posiciones_verdes)):
             self.solucion = self.busqueda_meta(self.estado_inicial, self.posiciones_verdes[i], self.posiciones_verdes)
@@ -165,9 +168,23 @@ class FrameWork(object):
                 self.posf = self.distancias.index(min(self.distancias))
         
         # Sacando las posiciones del pixel verde.
-        print("Posición: ", self.posf)
-        meta = self.lista_temporal[self.posf]
-        print("Meta: ", meta)
+        #print("Posición: ", self.posf)
+        self.meta = self.posiciones_verdes[self.posf]
+        print("Meta: ", self.meta)
+
+        # Imprimiendo el estado inicial.
+        print("Estado inicial: ", self.estado_inicial)
+
+        #print("Distancias: ", self.distancias)
+
+        # Hay que encontrar los pixeles blancos que sirvan de camino para llegar a la meta.
+        #print("Posiciones blancos: ", self.posiciones_blancos)
+        for i in range(len(self.posiciones_blancos)):
+            # print("Camino: ", self.posiciones_blancos[i])
+            # print("Meta: ", self.meta)
+            # print("Estado inicial: ", self.estado_inicial)
+            pass
+
 
     def busqueda_meta(self, estado_inicial, estado_final, posiciones_verdes): # Este método se encarga de buscar la solución.
         # Creando una lista para guardar las distancias entre el estado inicial y el estado final.
@@ -202,32 +219,6 @@ class FrameWork(object):
         if a == "arriba":
             print("Moverse hacia arriba")
             print("Posición: ", s[0], s[1])
-            
-            # print("Posición: ", s[0] - 1, s[1])
-            # print("Posición: ", s[0] - 2, s[1])
-            # print("Posición: ", s[0] - 3, s[1])
-            # print("Posición: ", s[0] - 4, s[1])
-            # print("Posición: ", s[0] - 5, s[1])
-            # print("Posición: ", s[0] - 6, s[1])
-            # print("Posición: ", s[0] - 7, s[1])
-            # print("Posición: ", s[0] - 8, s[1])
-            # print("Posición: ", s[0] - 9, s[1])
-            # print("Posición: ", s[0] - 10, s[1])
-            # print("Posición: ", s[0] - 11, s[1])
-            # print("Posición: ", s[0] - 12, s[1])
-            # print("Posición: ", s[0] - 13, s[1])
-            # print("Posición: ", s[0] - 14, s[1])
-            # print("Posición: ", s[0] - 15, s[1])
-            # print("Posición: ", s[0] - 16, s[1])
-            # print("Posición: ", s[0] - 17, s[1])
-            # print("Posición: ", s[0] - 18, s[1])
-            # print("Posición: ", s[0] - 19, s[1])
-            # print("Posición: ", s[0] - 20, s[1])
-            # print("Posición: ", s[0] - 21, s[1])
-            # print("Posición: ", s[0] - 22, s[1])
-            # print("Posición: ", s[0] - 23, s[1])
-            # print("Posición: ", s[0] - 24, s[1])
-
         elif a == "abajo":
             print("Moverse hacia abajo")
             print("Posición: ", s[0], s[1])
@@ -240,7 +231,11 @@ class FrameWork(object):
 
     def goalTest(self, s):
         # Si el estado actual es igual al estado meta, entonces se ha llegado a la meta.
-        pass
+        if s == self.meta:
+            return True
+        else:
+            return False
 
-    def pathCost(self, c, s, a, sd):
+    # Método que detecta el stepcots.
+    def step_cost(self, s, a, ss):
         pass
