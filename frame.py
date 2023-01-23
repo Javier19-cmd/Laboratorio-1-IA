@@ -6,6 +6,7 @@ Clase FrameWork: Esta clase se encarga de crear la matriz que se utilizará para
 Se tiene que usar el paradigma de programación orientada a objetos.
 """
 import math as m # Importando la librería math para poder usar la función sqrt.
+import queue # Importando la librería queue para poder usar la función PriorityQueue.
 
 class FrameWork(object):
     def __init__(self, matriz):
@@ -35,6 +36,10 @@ class FrameWork(object):
         self.meta = () # Estado meta del agente.
 
         self.posf = () # Posición final del agente.
+
+        self.camino_i = [] # Lista que almacenará el camino inicial.
+
+        self.antiguo = [] # Estado antiguo del movimiento.
 
         self.action() # Definiendo las acciones que tomará el agente para llegar a la meta.
 
@@ -185,6 +190,48 @@ class FrameWork(object):
             # print("Estado inicial: ", self.estado_inicial)
             pass
 
+        #Obteniendo un pixel blanco que sirva de camino.
+        for i in range(len(self.posiciones_blancos)):
+            #print("Camino: ", self.posiciones_blancos[i])
+            #print("Meta: ", self.meta)
+            #print("Estado inicial: ", self.estado_inicial)
+            # Verificando esté en cualquier posición cercana al estado inicial.
+            if self.posiciones_blancos[i][0] == self.estado_inicial[0] or self.posiciones_blancos[i][0] == self.estado_inicial[0] + 1 or self.posiciones_blancos[i][0] == self.estado_inicial[0] - 1:
+                if self.posiciones_blancos[i][1] == self.estado_inicial[1] or self.posiciones_blancos[i][1] == self.estado_inicial[1] + 1 or self.posiciones_blancos[i][1] == self.estado_inicial[1] - 1:
+                    #print("Camino: ", self.posiciones_blancos[i])
+                    #print("Meta: ", self.meta)
+                    #print("Estado inicial: ", self.estado_inicial)
+                    #print("Posición: ", i)
+                    self.camino_i.append(self.posiciones_blancos[i])
+                    #print("Camino: ", self.camino)
+            
+        print("Camino: ", self.camino_i)
+
+        # Algoritmo BFS.
+        cola = queue.Queue()
+        cola.put(self.estado_inicial) # Estado inicial del laberinto.
+        add = self.camino_i[0] # Un posible camino que se puede tomar.
+        antiguos = self.camino_i[1] # Estado anterior del laberinto.
+
+        #self.goalTest(antiguos, add)
+        
+        while not self.goalTest(antiguos, add):
+            add = cola.get() # Obteniendo el primer elemento de la cola.
+
+            # Buscando los vecinos del estado actual.
+            for a in range(len(self.camino_i)):
+                if self.camino_i[a][0] == add[0] or self.camino_i[a][0] == add[0] + 1 or self.camino_i[a][0] == add[0] - 1:
+                    if self.camino_i[a][1] == add[1] or self.camino_i[a][1] == add[1] + 1 or self.camino_i[a][1] == add[1] - 1:
+                        cola.put(self.camino_i[a])
+                        antiguos = add
+                        
+                        # Verificando si el estado actual es el estado final.
+                        if self.valido(self.camino_i[a], self.meta):
+                            print("Estado final: ", self.camino_i[a])
+                            break
+
+
+
 
     def busqueda_meta(self, estado_inicial, estado_final, posiciones_verdes): # Este método se encarga de buscar la solución.
         # Creando una lista para guardar las distancias entre el estado inicial y el estado final.
@@ -209,32 +256,72 @@ class FrameWork(object):
         #print(self.distancias)
 
 
-    def result(self, s, a): # s es el estado actual y a es la acción a realizar.
-        # Devuelve el estado que resulta de realizar la acción a en el estado s.
+    def valido(self, antiguo, s):
         
-        print("Estado actual: ", s)
-        print("Acción a realizar: ", a)
+        start = 0
+        for x, pos in enumerate(self.matriz):
+            # Si la posición actual es igual a la posición del pixel rojo, entonces se guarda la posición.
+            if pos in self.posiciones_rojos:
+                start = x
 
-        # Si la acción es moverse hacia arriba.
-        if a == "arriba":
-            print("Moverse hacia arriba")
-            print("Posición: ", s[0], s[1])
-        elif a == "abajo":
-            print("Moverse hacia abajo")
-            print("Posición: ", s[0], s[1])
-        elif a == "izquierda":
-            print("Moverse hacia la izquierda")
-            print("Posición: ", s[0], s[1])
-        elif a == "derecha":
-            print("Moverse hacia la derecha")
-            print("Posición: ", s[0], s[1])
+        i = start
+        j = 0
 
-    def goalTest(self, s):
+        for m in s: 
+            # Si el indice 0 de la posición antigua es menor al indice 0 de la posición actual, entonces se mueve hacia arriba.
+            if antiguo[0] < s[0]:
+                i -= 1
+            # Si el indice 0 de la posición antigua es mayor al indice 0 de la posición actual, entonces se mueve hacia abajo.
+            elif antiguo[0] > s[0]:
+                i += 1
+            # Si el indice 1 de la posición antigua es menor al indice 1 de la posición actual, entonces se mueve hacia la izquierda.
+            elif antiguo[1] < s[1]:
+                j -= 1
+            # Si el indice 1 de la posición antigua es mayor al indice 1 de la posición actual, entonces se mueve hacia la derecha.
+            elif antiguo[1] > s[1]:
+                j += 1
+            
+            if not( 0 <= i < len(self.matriz) and 0 <= j < len(self.matriz[0]) ): # Si la posición actual es menor a 0 o mayor a la longitud de la matriz, entonces no es válido.
+                return False
+            elif self.matriz[j][i] in self.posiciones_negros:
+                return False
+        
+        return True
+
+
+    def goalTest(self, antiguo, s):
         # Si el estado actual es igual al estado meta, entonces se ha llegado a la meta.
-        if s == self.meta:
+        start = 0
+
+        for x, y in enumerate(self.matriz):
+            if y in self.posiciones_rojos: 
+                start = x
+
+        i = start
+        j = 0
+
+        for m in s: 
+            # Si el indice 0 de la posición antigua es menor al indice 0 de la posición actual, entonces se mueve hacia arriba.
+            if antiguo[0] < s[0]:
+                i -= 1
+            # Si el indice 0 de la posición antigua es mayor al indice 0 de la posición actual, entonces se mueve hacia abajo.
+            elif antiguo[0] > s[0]:
+                i += 1
+            # Si el indice 1 de la posición antigua es menor al indice 1 de la posición actual, entonces se mueve hacia la izquierda.
+            elif antiguo[1] < s[1]:
+                j -= 1
+            # Si el indice 1 de la posición antigua es mayor al indice 1 de la posición actual, entonces se mueve hacia la derecha.
+            elif antiguo[1] > s[1]:
+                j += 1
+
+        if self.matriz[i][j] in self.posiciones_verdes: # Si la posición está en la lista de las posiciones verdes, entonces se devuelve verde.
+            print("Se ha llegado a la meta.")
             return True
-        else:
+        elif self.matriz[i][j] not in self.posiciones_verdes:
+            print("No se ha llegado a la meta.")
             return False
+        
+        return True
 
     # Método que detecta el stepcots.
     def step_cost(self, s, a, ss):
