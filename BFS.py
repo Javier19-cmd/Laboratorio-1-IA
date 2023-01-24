@@ -67,7 +67,7 @@ def printMaze(maze, path=""):
 def valid(maze, moves):
     for x, pos in enumerate(maze[0]):
         if pos == "O":
-            start = x
+            start = x         
 
     i = start
     j = 0

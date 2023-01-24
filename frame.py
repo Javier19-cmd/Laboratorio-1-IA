@@ -21,6 +21,9 @@ class FrameWork(object):
         self.color_temporal = []
         self.colores_blancos = []
 
+        # Creando una matriz con todas las posiciones de la matriz original.
+        self.matriz_posiciones = []
+
         self.posiciones_rojos = [] # Posiciones en donde se encuentran los colores rojos.
         self.rojo = [] # Guardando los rojos temporales.
         self.final = [] # Lista que almacenará los colores rojos que se encuentren en la matriz.
@@ -40,6 +43,8 @@ class FrameWork(object):
         self.camino_i = [] # Lista que almacenará el camino inicial.
 
         self.antiguo = [] # Estado antiguo del movimiento.
+
+        self.start = () # Estado inicial del agente.
 
         self.action() # Definiendo las acciones que tomará el agente para llegar a la meta.
 
@@ -89,7 +94,9 @@ class FrameWork(object):
                         #print("El color es rojo")
                         #print("Posición: ", i, j)
                         #self.posiciones.append((i, j))
+                        print("Color rojo", self.matriz[i][j])
                         self.posiciones_rojos.append((i, j))
+                        self.matriz_posiciones.append((i, j))
 
         #print("Posiciones", self.posiciones_rojos)
         
@@ -116,6 +123,7 @@ class FrameWork(object):
 
                         # Guardando las posiciones de los colores blancos en una lista.
                         self.posiciones_blancos.append((i, j))
+                        self.matriz_posiciones.append((i, j))
 
         #print("Posiciones blancos: ", self.posiciones_blancos)
 
@@ -129,6 +137,7 @@ class FrameWork(object):
                     # Verificando que las segundas y las terceras posiciones de las tuplas sean menores a 100.
                     if self.matriz[i][j][1] < 100 and self.matriz[i][j][2] < 100:
                         self.posiciones_negros.append((i, j))
+                        self.matriz_posiciones.append((i, j))
         
         #print("Posiciones: ", self.posiciones_negros)
         
@@ -144,9 +153,9 @@ class FrameWork(object):
                         #print("El color es verde", self.matriz[i][j])
                         #print("Posición: ", i, j)
                         self.posiciones_verdes.append((i, j))
+                        self.matriz_posiciones.append((i, j))
 
         #print(self.posiciones_verdes)
-
 
         #print("Posiciones: ", self.posiciones_negros)
         
@@ -175,10 +184,11 @@ class FrameWork(object):
         # Sacando las posiciones del pixel verde.
         #print("Posición: ", self.posf)
         self.meta = self.posiciones_verdes[self.posf]
-        print("Meta: ", self.meta)
+        #print(self.posiciones_verdes)
+        # print("Meta: ", self.meta)
 
-        # Imprimiendo el estado inicial.
-        print("Estado inicial: ", self.estado_inicial)
+        # # Imprimiendo el estado inicial.
+        # print("Estado inicial: ", self.estado_inicial)
 
         #print("Distancias: ", self.distancias)
 
@@ -205,30 +215,45 @@ class FrameWork(object):
                     self.camino_i.append(self.posiciones_blancos[i])
                     #print("Camino: ", self.camino)
             
-        print("Camino: ", self.camino_i)
+        #print("Camino: ", self.camino_i)
 
         # Algoritmo BFS.
         cola = queue.Queue()
-        cola.put(self.estado_inicial) # Estado inicial del laberinto.
-        add = self.camino_i[0] # Un posible camino que se puede tomar.
-        antiguos = self.camino_i[1] # Estado anterior del laberinto.
+        #cola.put(self.camino_i[0]) # Estado inicial del laberinto. (Pixel de color blanco)
+        add = self.camino_i[0] # Estado actual.
+        cola.put(add) # Estado inicial del laberinto. (Pixel de color blanco)
+    
+        while True: 
+            add = cola.get()
+            
+            a = self.goalTest(add)
 
-        #self.goalTest(antiguos, add)
+            if a == True:
+                print("Meta")
+                break
+
+
+        # while not self.goalTest(add):
+        #     add = cola.get() # Obteniendo el primer elemento de la cola.
+
+        #     print(add)
         
-        while not self.goalTest(antiguos, add):
-            add = cola.get() # Obteniendo el primer elemento de la cola.
+            # # Buscando los vecinos del estado actual en la lista de blancos.
+            # for a in range(len(self.posiciones_blancos)):
+            #     if self.posiciones_blancos[a][0] == add[0] or self.posiciones_blancos[a][0] == add[0] + 1 or self.posiciones_blancos[a][0] == add[0] - 1:
+            #         if self.posiciones_blancos[a][1] == add[1] or self.posiciones_blancos[a][1] == add[1] + 1 or self.posiciones_blancos[a][1] == add[1] - 1:
+            #             cola.put(self.posiciones_blancos[a])
+            #             antiguos = add
 
-            # Buscando los vecinos del estado actual.
-            for a in range(len(self.camino_i)):
-                if self.camino_i[a][0] == add[0] or self.camino_i[a][0] == add[0] + 1 or self.camino_i[a][0] == add[0] - 1:
-                    if self.camino_i[a][1] == add[1] or self.camino_i[a][1] == add[1] + 1 or self.camino_i[a][1] == add[1] - 1:
-                        cola.put(self.camino_i[a])
-                        antiguos = add
-                        
-                        # Verificando si el estado actual es el estado final.
-                        if self.valido(self.camino_i[a], self.meta):
-                            print("Estado final: ", self.camino_i[a])
-                            break
+            #             #print("Estado anterior: ", antiguos)
+
+            #             #print("Estado actual: ", self.camino_i[a])
+
+            #             #self.valido(self.camino_i[a], self.meta)
+
+            #             # Verificando que el siguiente pixel no sea negro.
+            #             if self.valido(add):
+            #                 cola.put(self.posiciones_blancos[a])
 
 
 
@@ -256,70 +281,138 @@ class FrameWork(object):
         #print(self.distancias)
 
 
-    def valido(self, antiguo, s):
+    def valido(self, s):
         
-        start = 0
+        #start = 0
         for x, pos in enumerate(self.matriz):
             # Si la posición actual es igual a la posición del pixel rojo, entonces se guarda la posición.
             if pos in self.posiciones_rojos:
-                start = x
+                self.start = x
 
-        i = start
+        i = self.start
         j = 0
 
-        for m in s: 
+       # print(s)
+
+        # print("S: ", type(s))
+        # print("Matriz: ", self.matriz_posiciones[0])
+
+        for m in s:
             # Si el indice 0 de la posición antigua es menor al indice 0 de la posición actual, entonces se mueve hacia arriba.
-            if antiguo[0] < s[0]:
-                i -= 1
+            if self.matriz_posiciones[m][0] < s[0]:
+                i = s[0] - 1
+                #print("Reducción en x: ", i)
+                return (i, j)
             # Si el indice 0 de la posición antigua es mayor al indice 0 de la posición actual, entonces se mueve hacia abajo.
-            elif antiguo[0] > s[0]:
-                i += 1
+            elif self.matriz_posiciones[m][1] > s[0]:
+                i = s[0] + 1
+                #print("Aumento en x: ", i)
+                return (i, j)
             # Si el indice 1 de la posición antigua es menor al indice 1 de la posición actual, entonces se mueve hacia la izquierda.
-            elif antiguo[1] < s[1]:
-                j -= 1
+            elif self.matriz_posiciones[m][0] < s[1]:
+                j = s[1] - 1
+                #print("Reducción en y: ", j)
+                return (i, j)
             # Si el indice 1 de la posición antigua es mayor al indice 1 de la posición actual, entonces se mueve hacia la derecha.
-            elif antiguo[1] > s[1]:
-                j += 1
-            
-            if not( 0 <= i < len(self.matriz) and 0 <= j < len(self.matriz[0]) ): # Si la posición actual es menor a 0 o mayor a la longitud de la matriz, entonces no es válido.
-                return False
-            elif self.matriz[j][i] in self.posiciones_negros:
-                return False
+            elif self.matriz_posiciones[m][1] > s[1]:
+                j = s[1] + 1
+                return (i, j)
+                #print("Aumento en y: ", j)
+
         
-        return True
+        return (i, j)
 
-
-    def goalTest(self, antiguo, s):
+    def goalTest(self, s):
         # Si el estado actual es igual al estado meta, entonces se ha llegado a la meta.
-        start = 0
+        for x in range(len(self.matriz)):
+            for y in range(len(self.matriz[x])):
+                #print("Estado actual: ", s)
+                if (s in self.posiciones_blancos) and (self.estado_inicial in self.posiciones_rojos):
+                    start = s
 
-        for x, y in enumerate(self.matriz):
-            if y in self.posiciones_rojos: 
-                start = x
-
+        # Índices de la posición actual.
         i = start
-        j = 0
 
-        for m in s: 
-            # Si el indice 0 de la posición antigua es menor al indice 0 de la posición actual, entonces se mueve hacia arriba.
-            if antiguo[0] < s[0]:
-                i -= 1
-            # Si el indice 0 de la posición antigua es mayor al indice 0 de la posición actual, entonces se mueve hacia abajo.
-            elif antiguo[0] > s[0]:
-                i += 1
-            # Si el indice 1 de la posición antigua es menor al indice 1 de la posición actual, entonces se mueve hacia la izquierda.
-            elif antiguo[1] < s[1]:
-                j -= 1
-            # Si el indice 1 de la posición antigua es mayor al indice 1 de la posición actual, entonces se mueve hacia la derecha.
-            elif antiguo[1] > s[1]:
-                j += 1
+        #print("Primer punto blanco: ", i)
+        
+        # Buscar los puntos que están cerca del punto blanco.
+        for x in range(len(self.matriz)):
+            for y in range(len(self.matriz[x])):
+                if (x, y) in self.posiciones_blancos:
+                    #print("Punto blanco: ", (x, y))
 
-        if self.matriz[i][j] in self.posiciones_verdes: # Si la posición está en la lista de las posiciones verdes, entonces se devuelve verde.
-            print("Se ha llegado a la meta.")
-            return True
-        elif self.matriz[i][j] not in self.posiciones_verdes:
-            print("No se ha llegado a la meta.")
-            return False
+                    if ((x + 1, y) in self.posiciones_blancos) and ((x + 1, y) > i):
+                        #print("Punto blanco: ", (x + 1, y))
+                        # print("Punto blanco: ", (x + 1, y))
+                        # print("I: ", i)
+                        i = (x + 1, y)
+                        #print("I: ", i)
+
+                        # Verificando que el siguiente punto sea verde.
+                        if (x + 1, y) in self.posiciones_verdes:
+                            print("Punto verde: ", i)
+                            return True
+
+                    if ((x - 1, y) in self.posiciones_blancos) and ((x - 1, y) > i):
+                        #print("Punto blanco: ", (x - 1, y))
+                        # print("Punto blanco: ", (x - 1, y))
+                        # print("I: ", i)
+                        i = (x - 1, y)
+                        #print("I: ", i)
+                        
+                        # Verificando que el siguiente punto sea verde.
+                        if (x - 1, y) in self.posiciones_verdes:
+                            print("Punto verde: ", i)
+                            return True
+                            
+                    if ((x, y + 1) in self.posiciones_blancos) and ((x, y + 1) > i):
+                        #print("Punto blanco: ", (x, y + 1))
+                        # print("Punto blanco: ", (x, y + 1))
+                        # print("I: ", i)
+                        i = (x, y + 1)
+                        
+                        # Verificando que el siguiente punto sea verde.
+                        if (x, y + 1) in self.posiciones_verdes:
+                            print("Punto verde: ", i)
+                            return True
+
+                    if ((x, y - 1) in self.posiciones_blancos) and ((x, y - 1) < i):
+                        #print("Punto blanco: ", (x, y - 1))
+                        # print("Punto blanco: ", (x, y - 1))
+                        # print("I: ", i)
+                        i = (x, y - 1)
+                        #print("I: ", i)
+                        
+
+                        # Verificando que el siguiente punto sea verde.
+                        if (x, y - 1) in self.posiciones_verdes:
+                            
+                            print("Punto verde: ", i)
+                            return True
+
+
+                    
+
+        # for m in s: 
+        #     # Si el indice 0 de la posición antigua es menor al indice 0 de la posición actual, entonces se mueve hacia arriba.
+        #     if antiguo[0] < s[0]:
+        #         i -= 1
+        #     # Si el indice 0 de la posición antigua es mayor al indice 0 de la posición actual, entonces se mueve hacia abajo.
+        #     elif antiguo[0] > s[0]:
+        #         i += 1
+        #     # Si el indice 1 de la posición antigua es menor al indice 1 de la posición actual, entonces se mueve hacia la izquierda.
+        #     elif antiguo[1] < s[1]:
+        #         j -= 1
+        #     # Si el indice 1 de la posición antigua es mayor al indice 1 de la posición actual, entonces se mueve hacia la derecha.
+        #     elif antiguo[1] > s[1]:
+        #         j += 1
+
+        # if self.matriz[i][j] in self.posiciones_verdes: # Si la posición está en la lista de las posiciones verdes, entonces se devuelve verde.
+        #     #print("Se ha llegado a la meta.")
+        #     return True
+        # elif self.matriz[i][j] not in self.posiciones_verdes:
+        #     #print("No se ha llegado a la meta.")
+        #     return False
         
         return True
 
