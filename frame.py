@@ -222,15 +222,22 @@ class FrameWork(object):
         #cola.put(self.camino_i[0]) # Estado inicial del laberinto. (Pixel de color blanco)
         add = self.camino_i[0] # Estado actual.
         cola.put(add) # Estado inicial del laberinto. (Pixel de color blanco)
+        #print(add)
     
+        # add = cola.get()
+        # print(add)
+
         while True: 
             add = cola.get()
-            
-            a = self.goalTest(add)
 
-            if a == True:
-                print("Meta")
+            if self.goalTest(add) in self.posiciones_blancos:
                 break
+            else:
+                punto = self.goalTest(add)
+                #print(punto)
+                cola.put(punto)
+                
+        
 
 
         # while not self.goalTest(add):
@@ -280,48 +287,6 @@ class FrameWork(object):
         #print("Distancia: ", distancia)
         #print(self.distancias)
 
-
-    def valido(self, s):
-        
-        #start = 0
-        for x, pos in enumerate(self.matriz):
-            # Si la posición actual es igual a la posición del pixel rojo, entonces se guarda la posición.
-            if pos in self.posiciones_rojos:
-                self.start = x
-
-        i = self.start
-        j = 0
-
-       # print(s)
-
-        # print("S: ", type(s))
-        # print("Matriz: ", self.matriz_posiciones[0])
-
-        for m in s:
-            # Si el indice 0 de la posición antigua es menor al indice 0 de la posición actual, entonces se mueve hacia arriba.
-            if self.matriz_posiciones[m][0] < s[0]:
-                i = s[0] - 1
-                #print("Reducción en x: ", i)
-                return (i, j)
-            # Si el indice 0 de la posición antigua es mayor al indice 0 de la posición actual, entonces se mueve hacia abajo.
-            elif self.matriz_posiciones[m][1] > s[0]:
-                i = s[0] + 1
-                #print("Aumento en x: ", i)
-                return (i, j)
-            # Si el indice 1 de la posición antigua es menor al indice 1 de la posición actual, entonces se mueve hacia la izquierda.
-            elif self.matriz_posiciones[m][0] < s[1]:
-                j = s[1] - 1
-                #print("Reducción en y: ", j)
-                return (i, j)
-            # Si el indice 1 de la posición antigua es mayor al indice 1 de la posición actual, entonces se mueve hacia la derecha.
-            elif self.matriz_posiciones[m][1] > s[1]:
-                j = s[1] + 1
-                return (i, j)
-                #print("Aumento en y: ", j)
-
-        
-        return (i, j)
-
     def goalTest(self, s):
         # Si el estado actual es igual al estado meta, entonces se ha llegado a la meta.
         for x in range(len(self.matriz)):
@@ -332,6 +297,7 @@ class FrameWork(object):
 
         # Índices de la posición actual.
         i = start
+        #print("I antes del for: ", i)
 
         #print("Primer punto blanco: ", i)
         
@@ -341,80 +307,31 @@ class FrameWork(object):
                 if (x, y) in self.posiciones_blancos:
                     #print("Punto blanco: ", (x, y))
 
-                    if ((x + 1, y) in self.posiciones_blancos) and ((x + 1, y) > i):
-                        #print("Punto blanco: ", (x + 1, y))
-                        # print("Punto blanco: ", (x + 1, y))
-                        # print("I: ", i)
-                        i = (x + 1, y)
+                    # Modificando los índices del i actual.
+                    #print(i[0], i[1])
+
+                    if (i[0] + 1, i[1]) in self.posiciones_blancos:
+                        i = (i[0] + 1, i[1])
                         #print("I: ", i)
+                        return i
 
-                        # Verificando que el siguiente punto sea verde.
-                        if (x + 1, y) in self.posiciones_verdes:
-                            print("Punto verde: ", i)
-                            return True
-
-                    if ((x - 1, y) in self.posiciones_blancos) and ((x - 1, y) > i):
-                        #print("Punto blanco: ", (x - 1, y))
-                        # print("Punto blanco: ", (x - 1, y))
-                        # print("I: ", i)
-                        i = (x - 1, y)
+                    elif (i[0] - 1, i[1]) in self.posiciones_blancos:
+                        i = (i[0] - 1, i[1])
                         #print("I: ", i)
                         
-                        # Verificando que el siguiente punto sea verde.
-                        if (x - 1, y) in self.posiciones_verdes:
-                            print("Punto verde: ", i)
-                            return True
-                            
-                    if ((x, y + 1) in self.posiciones_blancos) and ((x, y + 1) > i):
-                        #print("Punto blanco: ", (x, y + 1))
-                        # print("Punto blanco: ", (x, y + 1))
-                        # print("I: ", i)
-                        i = (x, y + 1)
-                        
-                        # Verificando que el siguiente punto sea verde.
-                        if (x, y + 1) in self.posiciones_verdes:
-                            print("Punto verde: ", i)
-                            return True
+                        return i
 
-                    if ((x, y - 1) in self.posiciones_blancos) and ((x, y - 1) < i):
-                        #print("Punto blanco: ", (x, y - 1))
-                        # print("Punto blanco: ", (x, y - 1))
-                        # print("I: ", i)
-                        i = (x, y - 1)
+                    elif (i[0], i[1] + 1) in self.posiciones_blancos:
+                        i = (i[0], i[1] + 1)
                         #print("I: ", i)
-                        
 
-                        # Verificando que el siguiente punto sea verde.
-                        if (x, y - 1) in self.posiciones_verdes:
-                            
-                            print("Punto verde: ", i)
-                            return True
+                        return i
 
+                    elif (i[0], i[1] - 1) in self.posiciones_blancos:
+                        i = (i[0], i[1] - 1)
+                        #print("I: ", i)
 
-                    
-
-        # for m in s: 
-        #     # Si el indice 0 de la posición antigua es menor al indice 0 de la posición actual, entonces se mueve hacia arriba.
-        #     if antiguo[0] < s[0]:
-        #         i -= 1
-        #     # Si el indice 0 de la posición antigua es mayor al indice 0 de la posición actual, entonces se mueve hacia abajo.
-        #     elif antiguo[0] > s[0]:
-        #         i += 1
-        #     # Si el indice 1 de la posición antigua es menor al indice 1 de la posición actual, entonces se mueve hacia la izquierda.
-        #     elif antiguo[1] < s[1]:
-        #         j -= 1
-        #     # Si el indice 1 de la posición antigua es mayor al indice 1 de la posición actual, entonces se mueve hacia la derecha.
-        #     elif antiguo[1] > s[1]:
-        #         j += 1
-
-        # if self.matriz[i][j] in self.posiciones_verdes: # Si la posición está en la lista de las posiciones verdes, entonces se devuelve verde.
-        #     #print("Se ha llegado a la meta.")
-        #     return True
-        # elif self.matriz[i][j] not in self.posiciones_verdes:
-        #     #print("No se ha llegado a la meta.")
-        #     return False
-        
-        return True
+                        return i
 
     # Método que detecta el stepcots.
     def step_cost(self, s, a, ss):
