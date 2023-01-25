@@ -10,8 +10,8 @@ Referencias:
 
 from PIL import Image
 import matplotlib.pyplot as plt
-from frame import * # Importando el módulo frame.py
-
+#from frame import * # Importando el módulo frame.py
+from pixels import * # Importando el módulo pixels.py
 class Main2(object):
     def __init__(self, path):
         self.path = path
@@ -20,7 +20,7 @@ class Main2(object):
         self.leer(path)
         #self.barrer()
 
-        FrameWork(self.pixels_b) # Creando el frame.
+        Pixels(self.pixels_b) # Creando el frame.
 
     def leer(self, path):
         
