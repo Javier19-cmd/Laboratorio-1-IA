@@ -64,7 +64,7 @@ class Breath(FrameWork):
 
     # Método goalTest.
     def goalTest(self, s, moves):
-        
+
         # Recorrer la matriz para encontrar el pixel rojo.
         for i in range(len(s)):
             for j in range(len(s[i])):
@@ -130,8 +130,8 @@ class Breath(FrameWork):
         for i in range(len(self.matriz)):
             for j in range(len(self.matriz[i])):
                 if self.matriz[i][j] in self.verde: 
-                    #print("Verde :v")
-                    pass
+                    print("Verde encontrado: ", self.matriz[i][j])
+                    
 
         while not self.goalTest(self.matriz, add):
             add = nums.get()
