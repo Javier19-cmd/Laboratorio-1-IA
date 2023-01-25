@@ -75,7 +75,7 @@ class Main2(object):
         for i in range(width):
             self.pixels.append([])
             for j in range(height):
-                self.pixels[i].append(imagen.getpixel((j,i)))
+                self.pixels[i].append(imagen.getpixel((i,j)))
                 # Imprimiendo la matriz.
                 #print(self.matrix[i][j], end=" ")
 
@@ -92,11 +92,10 @@ class Main2(object):
         for i in range(width1):
             self.pixels_b.append([])
             for j in range(height1):
-                self.pixels_b[i].append(pixels[j,i])
+                self.pixels_b[i].append(pixels[i,j])
                 # Imprimiendo la matriz.
                 #print(self.matrix[i][j], end=" ")
-
-
+        
         # # Escribiendo la matriz en un archivo.
         # with open("matriz.txt", "w") as f:
         #     for i in range(width):

@@ -11,7 +11,12 @@ class Pixels(object):
         self.posiciones_verdes = [] # Posiciones en donde se encuentran los colores verdes.
         
         self.color_temporal = []
+
+        # Matrices de colores.
         self.colores_blancos = []
+        self.colores_rojos = []
+        self.colores_negros = []
+        self.colores_verdes = []
 
         # Creando una matriz con todas las posiciones de la matriz original.
         self.matriz_posiciones = []
@@ -88,6 +93,7 @@ class Pixels(object):
                         #self.posiciones.append((i, j))
                         #print("Color rojo", self.matriz[i][j])
                         self.posiciones_rojos.append((i, j))
+                        self.colores_rojos.append(self.matriz[i][j])
                         self.matriz_posiciones.append((i, j))
 
         #print("Posiciones", self.posiciones_rojos)
@@ -115,6 +121,7 @@ class Pixels(object):
 
                         # Guardando las posiciones de los colores blancos en una lista.
                         self.posiciones_blancos.append((i, j))
+                        self.colores_blancos.append(self.matriz[i][j])
                         self.matriz_posiciones.append((i, j))
 
         #print("Posiciones blancos: ", self.posiciones_blancos)
@@ -129,6 +136,7 @@ class Pixels(object):
                     # Verificando que las segundas y las terceras posiciones de las tuplas sean menores a 100.
                     if self.matriz[i][j][1] < 100 and self.matriz[i][j][2] < 100:
                         self.posiciones_negros.append((i, j))
+                        self.colores_negros.append(self.matriz[i][j])
                         self.matriz_posiciones.append((i, j))
         
         #print("Posiciones: ", self.posiciones_negros)
@@ -145,6 +153,7 @@ class Pixels(object):
                         #print("El color es verde", self.matriz[i][j])
                         #print("Posición: ", i, j)
                         self.posiciones_verdes.append((i, j))
+                        self.colores_verdes.append(self.matriz[i][j])
                         self.matriz_posiciones.append((i, j))
 
         #print(self.posiciones_verdes)
@@ -209,4 +218,4 @@ class Pixels(object):
             
         #print("Camino: ", self.camino_i)
 
-        br.Breath(self.posiciones_blancos, self.posiciones_rojos, self.posiciones_negros)
+        br.Breath(self.matriz, self.posiciones_blancos, self.posiciones_rojos, self.posiciones_negros, self.posiciones_verdes, self.colores_verdes, self.colores_blancos, self.colores_rojos, self.colores_negros)

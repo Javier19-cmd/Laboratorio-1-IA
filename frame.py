@@ -8,14 +8,14 @@ Se tiene que usar el paradigma de programación orientada a objetos.
 class FrameWork:
     
     # Método action.
-    def action(s):
+    def action(self, s):
         pass
     
-    def stepCost(s, a, s2):
+    def stepCost(self, s, a, s2):
         pass
 
-    def result(s, a):
+    def result(self, s, a):
         pass
 
-    def goalTest(s):
+    def goalTest(self, s):
         pass
