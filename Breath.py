@@ -46,7 +46,7 @@ class Breath(FrameWork):
         if not(0 <= i < len(self.matriz[0]) and 0 <= j < len(self.matriz)):
             return False
 
-        if a not in self.action(s):
+        if a in self.negrop: # Verificando que el nodo no sea un obstáculo.
             return False
         
 

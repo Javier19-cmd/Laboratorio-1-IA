@@ -42,7 +42,8 @@ class Depth(FrameWork):
         if not(0 <= i < len(self.matriz[0]) and 0 <= j < len(self.matriz)):
             return False
 
-        if a not in self.action(s):
+        # Verificando que los puntos de a no sean puntos negros.
+        if a in self.negrop:
             return False
         
 
@@ -87,6 +88,7 @@ class Depth(FrameWork):
 
         #     for j in ["L", "R", "U", "D"]:
         #         add = col + j
+
         ini = self.rojop.pop(0) # Obteniendo el último elemento de la lista de pixeles rojos.
 
         print("Inicio: ", ini)
