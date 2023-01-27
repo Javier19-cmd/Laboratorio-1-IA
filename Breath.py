@@ -132,8 +132,9 @@ class Breath(FrameWork):
             for j in range(len(self.matriz[i])):
                 #print(self.matriz[i][j] in self.rojo)
                 if self.matriz[i][j] in self.rojo:
-                    print("Encontrado: ", self.matriz[i][j], i, j)
+                    #print("Encontrado: ", self.matriz[i][j], i, j)
                     #start = (i, j)
+                    pass
         
         self.cola.put(ini) # Agregando el primer elemento a la cola.
         self.visitas.append(ini) # Agregando el primer elemento a la lista de visitas.
