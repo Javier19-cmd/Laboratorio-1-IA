@@ -12,7 +12,7 @@ class Breath(FrameWork):
         self.rojo = rojo
         self.negro = negro
         self.visitas = [] # Lista para guardar los nodos visitados.
-        self.cola = queue.Queue() # Cola para guardar los nodos visitados.
+        self.cola = [] # Cola para guardar los nodos visitados.
 
         self.Algoritmo() # Llamando al algoritmo.
 
@@ -24,13 +24,13 @@ class Breath(FrameWork):
 
         if ((x, y + 1) in self.blancop) or ((x, y + 1) in self.verdep) or ((x, y + 1) in self.rojop):
             movs.append((x, y + 1)) # Movimiento hacia abajo.
-        elif ((x + 1, y) in self.blancop) or ((x + 1, y) in self.verdep) or ((x + 1, y) in self.rojop):
+        if ((x + 1, y) in self.blancop) or ((x + 1, y) in self.verdep) or ((x + 1, y) in self.rojop):
             movs.append((x + 1, y))
-        elif ((x, y - 1) in self.blancop) or ((x, y - 1) in self.verdep) or ((x, y - 1) in self.rojop):
+        if ((x, y - 1) in self.blancop) or ((x, y - 1) in self.verdep) or ((x, y - 1) in self.rojop):
             movs.append((x, y - 1))
-        elif ((x - 1, y) in self.blancop) or ((x - 1, y) in self.verdep) or ((x - 1, y) in self.rojop):
+        if ((x - 1, y) in self.blancop) or ((x - 1, y) in self.verdep) or ((x - 1, y) in self.rojop):
             movs.append((x - 1, y))
-        
+    
         return movs
         
     
@@ -96,6 +96,7 @@ class Breath(FrameWork):
         elif self.matriz[i][j] in self.verde:
             #printMaze(self.matriz, moves)
             #print("Gola")
+            print("Found: ")
             return True
 
         # # Verificando que los nodos visitados no se encuentren en la lista visitas.
@@ -136,26 +137,29 @@ class Breath(FrameWork):
                     #start = (i, j)
                     pass
         
-        self.cola.put(ini) # Agregando el primer elemento a la cola.
+        self.cola.append(ini) # Agregando el primer elemento a la cola.
         self.visitas.append(ini) # Agregando el primer elemento a la lista de visitas.
+        
 
         while True: 
-            if self.cola.empty() == False:
-                #print("No se encontró un camino.")
-
-                
-                sacar = self.cola.get()
+            if len(self.cola):
+                #print("No se encontró un camino.")       
+                sacar = self.cola.pop(0)
+                #print("Sacando: ", sacar)
                 if self.goalTest(sacar): 
                     return sacar
                 acciones = self.action(sacar)
-
+                #print(acciones)
                 for accion in acciones:
                     if accion not in self.visitas:
                         #print("Agregando: ", accion)
-                        self.cola.put(accion)
+                        self.cola.append(accion)
                         self.visitas.append(accion)
+                # print(self.visitas)
+                # print(self.cola)
             else:
                 return False
             
-    
-        
+            #print("Sacando: ", sacar)
+            self.visitas.sort()
+            #print("Visitas: ", self.visitas)
