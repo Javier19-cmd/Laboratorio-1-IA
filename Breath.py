@@ -32,55 +32,19 @@ class Breath(FrameWork):
             movs.append((x - 1, y))
     
         return movs
+
+    def result(self, s, a): # Método result.
+
+        i, j = s # Asignando los valores de s a i y j.
+        #print(a) # Asignando los valores de a a x e y.
+
+        # Verificando que el índice no se salga de la matriz.
+        if not(0 <= i < len(self.matriz[0]) and 0 <= j < len(self.matriz)):
+            return False
+
+        if a not in self.action(s):
+            return False
         
-    
-    # # Método result.
-    # def result(self, s, moves):
-
-        
-    #     # Recorrer la matriz para encontrar el pixel rojo.
-    #     for i in range(len(s)):
-    #         for j in range(len(s[i])):
-    #             #print(self.matriz[i][j] in self.rojo)
-    #             if s[i][j] in self.rojo: #Encontrando el inicio.
-    #                 #print("Encontrado: ", s[i][j])
-    #                 start = (i, j)
-        
-    #     i = start[0] # Asignando el valor de start a i.
-    #     j = start[1] # Asignando el valor de 0 a j.
-
-    #     for move in moves:
-    #         if move == "L":
-    #             i -= self.action("L")
-
-    #         elif move == "R":
-    #             i += self.action("R")
-
-    #         elif move == "U":
-    #             j -= self.action("U")
-
-    #         elif move == "D":
-    #             j += self.action("D")
-        
-
-    #     # Verificando que el índice no se salga de la matriz.
-    #     if not(0 <= i < len(self.matriz[0]) and 0 <= j < len(self.matriz)):
-    #         return False
-    #     elif self.matriz[i][j] in self.negro:
-    #         #print("Found: " + moves)
-    #         #printMaze(self.matriz, moves)
-    #         return False
-
-    #     # Ingresando los nodos visitados a la lista visitas.
-    #     self.visitas.append((i, j))
-        
-    #     # Si el nodo no se encuentra en la lista visitas, se agrega.
-    #     if (i, j) not in self.visitas:
-    #         self.visitas.append((i, j))
-    #     else:
-    #         return False
-
-    #     return True
 
     # Método goalTest.
     def goalTest(self, s):
@@ -96,7 +60,7 @@ class Breath(FrameWork):
         elif self.matriz[i][j] in self.verde:
             #printMaze(self.matriz, moves)
             #print("Gola")
-            print("Found: ")
+            print("Objetivo encontrado")
             return True
 
         # # Verificando que los nodos visitados no se encuentren en la lista visitas.
@@ -146,9 +110,16 @@ class Breath(FrameWork):
                 #print("No se encontró un camino.")       
                 sacar = self.cola.pop(0)
                 #print("Sacando: ", sacar)
-                if self.goalTest(sacar): 
-                    return sacar
+                
+                if self.goalTest(sacar): # Verificando si el nodo es el objetivo. 
+                    return sacar 
                 acciones = self.action(sacar)
+                
+                #print(self.result(sacar, acciones))
+
+                if self.result(sacar, acciones): # Verificando que no se desborde la búsqueda.
+                    return 
+
                 #print(acciones)
                 for accion in acciones:
                     if accion not in self.visitas:
