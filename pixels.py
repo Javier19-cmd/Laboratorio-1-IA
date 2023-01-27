@@ -220,4 +220,4 @@ class Pixels(object):
         #print("Camino: ", self.camino_i)
 
         br.Breath(self.matriz, self.posiciones_blancos, self.posiciones_rojos, self.posiciones_negros, self.posiciones_verdes, self.colores_verdes, self.colores_blancos, self.colores_rojos, self.colores_negros)
-        #dp.Depth(self.matriz, self.posiciones_blancos, self.posiciones_rojos, self.posiciones_negros, self.posiciones_verdes, self.colores_verdes, self.colores_blancos, self.colores_rojos, self.colores_negros)
+        dp.Depth(self.matriz, self.posiciones_blancos, self.posiciones_rojos, self.posiciones_negros, self.posiciones_verdes, self.colores_verdes, self.colores_blancos, self.colores_rojos, self.colores_negros)

@@ -64,7 +64,7 @@ class Breath(FrameWork):
         elif self.matriz[i][j] in self.verde:
             #printMaze(self.matriz, moves)
             #print("Gola")
-            print("Objetivo encontrado")
+            print("Objetivo encontrado", self.matriz[i][j])
             return True
 
         # # Verificando que los nodos visitados no se encuentren en la lista visitas.

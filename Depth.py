@@ -1,6 +1,6 @@
 from frame import * # Importando el módulo frame.py
 import queue # Importando la librería queue para el algoritmo.
-class Breath(FrameWork): 
+class Depth(FrameWork): 
     def __init__(self, matriz, blanco_pos, rojo_pos, negro_pos, verde_pos, verde, blanco, rojo, negro): # Recibiendo las listas de pixeles.
         self.matriz = matriz
         self.verdep = verde_pos
@@ -11,8 +11,8 @@ class Breath(FrameWork):
         self.blanco = blanco
         self.rojo = rojo
         self.negro = negro
-        self.visitas = [] # Lista para guardar los nodos visitados.
         self.cola = [] # Cola para guardar los nodos visitados.
+        self.visitas = set() # Lista para guardar los nodos visitados.
 
         self.Algoritmo() # Llamando al algoritmo.
 
@@ -60,7 +60,7 @@ class Breath(FrameWork):
         elif self.matriz[i][j] in self.verde:
             #printMaze(self.matriz, moves)
             #print("Gola")
-            print("Objetivo encontrado")
+            print("Objetivo encontrado", self.matriz[i][j])
             return True
 
         # # Verificando que los nodos visitados no se encuentren en la lista visitas.
@@ -102,7 +102,7 @@ class Breath(FrameWork):
                     pass
         
         self.cola.append(ini) # Agregando el primer elemento a la cola.
-        self.visitas.append(ini) # Agregando el primer elemento a la lista de visitas.
+        self.visitas.add(ini) # Agregando el primer elemento a la lista de visitas.
         
 
         while True: 
@@ -125,12 +125,13 @@ class Breath(FrameWork):
                     if accion not in self.visitas:
                         #print("Agregando: ", accion)
                         self.cola.append(accion)
-                        self.visitas.append(accion)
+                        self.visitas.add(accion)
                 # print(self.visitas)
                 # print(self.cola)
             else:
                 return False
             
             #print("Sacando: ", sacar)
-            self.visitas.sort()
+            # Ordenando el set de visitas.
+            sorted(self.visitas)
             #print("Visitas: ", self.visitas)
