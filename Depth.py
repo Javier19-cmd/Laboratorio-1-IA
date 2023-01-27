@@ -1,8 +1,6 @@
 from frame import * # Importando el módulo frame.py
 import queue # Importando la librería queue para el algoritmo.
-import Graph as g # Importando el módulo Graph.py
-
-class Depth(FrameWork): 
+class Breath(FrameWork): 
     def __init__(self, matriz, blanco_pos, rojo_pos, negro_pos, verde_pos, verde, blanco, rojo, negro): # Recibiendo las listas de pixeles.
         self.matriz = matriz
         self.verdep = verde_pos
@@ -13,127 +11,126 @@ class Depth(FrameWork):
         self.blanco = blanco
         self.rojo = rojo
         self.negro = negro
-        self.grafo = 0 # Diccionario para guardar el grafo.
+        self.visitas = [] # Lista para guardar los nodos visitados.
+        self.cola = [] # Cola para guardar los nodos visitados.
 
-        # Obteniendo el nodo inicial.
-        for i in range(len(self.matriz)):
-            for j in range(len(self.matriz[i])):
-                if self.matriz[i][j] in self.rojo:
-                    self.start = (i, j)
-        
-        # Obteniendo el nodo final.
-        for i in range(len(self.matriz)):
-            for j in range(len(self.matriz[i])):
-                if self.matriz[i][j] in self.verde:
-                    self.final = (i, j)
+        self.Algoritmo() # Llamando al algoritmo.
 
-        self.dfs() # Llamando al algoritmo.
+    # Método action.
+    def action(self, s):
+        x, y = s # Asignando los valores de s a x e y.
 
-    # # Método action.
-    # def action(self, s):
-    #     if s == "L":
-    #         return 1
-    #     if s == "R":
-    #         return 1
-    #     if s == "U":
-    #         return 1
-    #     if s == "D":
-    #         return 1
+        movs = [] # Lista para guardar los movimientos.
+
+        if ((x, y + 1) in self.blancop) or ((x, y + 1) in self.verdep) or ((x, y + 1) in self.rojop):
+            movs.append((x, y + 1)) # Movimiento hacia abajo.
+        if ((x + 1, y) in self.blancop) or ((x + 1, y) in self.verdep) or ((x + 1, y) in self.rojop):
+            movs.append((x + 1, y))
+        if ((x, y - 1) in self.blancop) or ((x, y - 1) in self.verdep) or ((x, y - 1) in self.rojop):
+            movs.append((x, y - 1))
+        if ((x - 1, y) in self.blancop) or ((x - 1, y) in self.verdep) or ((x - 1, y) in self.rojop):
+            movs.append((x - 1, y))
     
-    # # Método result.
-    # def result(self, s, moves):
-        
-    #     # Recorrer la matriz para encontrar el pixel rojo.
-    #     for i in range(len(s)):
-    #         for j in range(len(s[i])):
-    #             #print(self.matriz[i][j] in self.rojo)
-    #             if s[i][j] in self.rojo: #Encontrando el inicio.
-    #                 #print("Encontrado: ", s[i][j])
-    #                 start = (i, j)
-        
-    #     i = start[0] # Asignando el valor de start a i.
-    #     j = start[1] # Asignando el valor de 0 a j.
+        return movs
 
-    #     for move in moves:
-    #         if move == "L":
-    #             i -= self.action("L")
+    def result(self, s, a): # Método result.
 
-    #         elif move == "R":
-    #             i += self.action("R")
+        i, j = s # Asignando los valores de s a i y j.
+        #print(a) # Asignando los valores de a a x e y.
 
-    #         elif move == "U":
-    #             j -= self.action("U")
+        # Verificando que el índice no se salga de la matriz.
+        if not(0 <= i < len(self.matriz[0]) and 0 <= j < len(self.matriz)):
+            return False
 
-    #         elif move == "D":
-    #             j += self.action("D")
+        if a not in self.action(s):
+            return False
         
 
-    #     # Verificando que el índice no se salga de la matriz.
-    #     if not(0 <= i < len(s[0]) and 0 <= j < len(s)):
-    #         return False
-    #     elif self.matriz[i][j] in self.negro:
-    #         #print("Found: " + moves)
-    #         #printMaze(self.matriz, moves)
-    #         return False
-    #     return True
+    # Método goalTest.
+    def goalTest(self, s):
 
-    # # Método goalTest.
-    # def goalTest(self, s, moves):
-
-    #     # Recorrer la matriz para encontrar el pixel rojo.
-    #     for i in range(len(s)):
-    #         for j in range(len(s[i])):
-    #             #print(self.matriz[i][j] in self.rojo)
-    #             if s[i][j] in self.rojo: #Encontrando el inicio.
-    #                 #print("Encontrado: ")
-    #                 start = (i, j)
-
-    #     i = start[0] # Asignando el valor de start a i.
-    #     j = start[1] # Asignando el valor de 0 a j.
-
-    #     for move in moves:
-    #         if move == "L":
-    #             i -= self.action("L")
-
-    #         elif move == "R":
-    #             i += self.action("R")
-
-    #         elif move == "U":
-    #             j -= self.action("U")
-
-    #         elif move == "D":
-    #             j += self.action("D")
-
-    #     #print(self.matriz[i][j] == (254, 0, 0))
-    #     # Verificando que el color verde se encuentre en la matriz original.
-    #     #print(i, j)
-    #     if s[i][j] in self.verde:
-    #         print("Verde: ", s[i][j])
-    #         return True
+        i, j = s # Asignando los valores de s a i y j.
         
-    #     return False
+        #print(self.matriz[i][j] == (254, 0, 0))
+        # Verificando que el color verde se encuentre en la matriz original.
+        #print(i, j)
+        # Verificando que el índice no se salga de la matriz.
+        if not(0 <= i < len(self.matriz[0]) and 0 <= j < len(self.matriz)):
+            return s
+        elif self.matriz[i][j] in self.verde:
+            #printMaze(self.matriz, moves)
+            #print("Gola")
+            print("Objetivo encontrado")
+            return True
 
-    def dfs(self):
-        visited = set() # Conjunto de nodos visitados.
-        dfs_transversal = list() # Lista de nodos recorridos.
+        # # Verificando que los nodos visitados no se encuentren en la lista visitas.
+        # if (i, j) not in self.visitas:
+        #     self.visitas.append((i, j))
+        # else: 
+        #     return False
+        
+        return False
 
-        edges = [] # Lista de aristas.
+    def Algoritmo(self): 
+        #print(inicioc)
 
-        # Contando el número de nodos de la matriz.
-        nodes = 0
+        # cola = queue.Queue() # Creando la cola.
+        # cola.put(ini) # Agregando el primer elemento a la cola.
+        # inicioc = self.rojo[-1] # Obteniendo el último elemento de la lista de pixeles rojos.
+        # add = "" # Variable que almacenará el camino.
+
+        # res = queue.Queue() # Lista que almacenará el camino.
+
+        # while not self.goalTest(inicioc, add):
+            
+        #     col = cola.get() # Obteniendo el primer elemento de la cola.
+
+        #     for j in ["L", "R", "U", "D"]:
+        #         add = col + j
+        ini = self.rojop.pop(0) # Obteniendo el último elemento de la lista de pixeles rojos.
+
+        print("Inicio: ", ini)
+        #print("Matriz", self.matriz)
+
+        # Recorriendo la matriz para encontrar el pixel rojo.
         for i in range(len(self.matriz)):
             for j in range(len(self.matriz[i])):
-                nodes += 1
+                #print(self.matriz[i][j] in self.rojo)
+                if self.matriz[i][j] in self.rojo:
+                    #print("Encontrado: ", self.matriz[i][j], i, j)
+                    #start = (i, j)
+                    pass
+        
+        self.cola.append(ini) # Agregando el primer elemento a la cola.
+        self.visitas.append(ini) # Agregando el primer elemento a la lista de visitas.
+        
 
-        # Convertir la matriz en un grafo.
-        for i in range(len(self.matriz)):
-            for j in range(len(self.matriz[i])):
-                edges.append((i, j))
+        while True: 
+            if len(self.cola):
+                #print("No se encontró un camino.")       
+                sacar = self.cola.pop(0)
+                #print("Sacando: ", sacar)
+                
+                if self.goalTest(sacar): # Verificando si el nodo es el objetivo. 
+                    return sacar 
+                acciones = self.action(sacar)
+                
+                #print(self.result(sacar, acciones))
 
-        # Creando el grafo.
-        self.grafo = g.Graph(edges, nodes)
+                if self.result(sacar, acciones): # Verificando que no se desborde la búsqueda.
+                    return 
 
-        print("Grafo: ", self.grafo.printGraph())
-
-        #grafo.printGraph() # Imprimiendo el grafo.
-        #print("Grafo: ", grafo)
+                #print(acciones)
+                for accion in acciones:
+                    if accion not in self.visitas:
+                        #print("Agregando: ", accion)
+                        self.cola.append(accion)
+                        self.visitas.append(accion)
+                # print(self.visitas)
+                # print(self.cola)
+            else:
+                return False
+            
+            #print("Sacando: ", sacar)
+            self.visitas.sort()
+            #print("Visitas: ", self.visitas)

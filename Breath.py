@@ -1,3 +1,7 @@
+"""
+Referencia: https://www.youtube.com/watch?v=hettiSrJjM4&ab_channel=TechWithTim
+"""
+
 from frame import * # Importando el módulo frame.py
 import queue # Importando la librería queue para el algoritmo.
 class Breath(FrameWork): 
