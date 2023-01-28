@@ -220,6 +220,18 @@ class Pixels(object):
             
         #print("Camino: ", self.camino_i)
 
-        #br.Breath(self.matriz, self.posiciones_blancos, self.posiciones_rojos, self.posiciones_negros, self.posiciones_verdes, self.colores_verdes, self.colores_blancos, self.colores_rojos, self.colores_negros)
-        #dp.Depth(self.matriz, self.posiciones_blancos, self.posiciones_rojos, self.posiciones_negros, self.posiciones_verdes, self.colores_verdes, self.colores_blancos, self.colores_rojos, self.colores_negros)
-        ast.AStart(self.matriz, self.posiciones_blancos, self.posiciones_rojos, self.posiciones_negros, self.posiciones_verdes, self.colores_verdes, self.colores_blancos, self.colores_rojos, self.colores_negros)
+        br.Breath(self.matriz, self.posiciones_blancos, self.posiciones_rojos, self.posiciones_negros, self.posiciones_verdes, self.colores_verdes, self.colores_blancos, self.colores_rojos, self.colores_negros)
+        
+        # Sacando copias de todas las listas para poder utilizarlas en la búsqueda de la solución.
+        self.posiciones_blancos_copia = self.posiciones_blancos.copy()
+        self.posiciones_rojos_copia = self.posiciones_rojos.copy()
+        self.posiciones_verdes_copia = self.posiciones_verdes.copy()
+        self.posiciones_negros_copia = self.posiciones_negros.copy()
+        self.colores_blancos_copia = self.colores_blancos.copy()
+        self.colores_rojos_copia = self.colores_rojos.copy()
+        self.colores_verdes_copia = self.colores_verdes.copy()
+        self.colores_negros_copia = self.colores_negros.copy()
+        
+        dp.Depth(self.matriz, self.posiciones_blancos, self.posiciones_rojos, self.posiciones_negros, self.posiciones_verdes, self.colores_verdes, self.colores_blancos, self.colores_rojos, self.colores_negros)
+        
+        ast.AStart(self.matriz, self.posiciones_blancos_copia, self.posiciones_rojos_copia, self.posiciones_negros_copia, self.posiciones_verdes_copia, self.colores_verdes_copia, self.colores_blancos_copia, self.colores_rojos_copia, self.colores_negros_copia)

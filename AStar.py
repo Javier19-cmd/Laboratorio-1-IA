@@ -83,7 +83,6 @@ class AStart(FrameWork):
         def algoritmo(self):
             # Obteniendo el nodo inicial.
             ini = self.rojop.pop(0)
-            col = self.rojo.pop(0)
 
             # Obteniendo el nodo final.
             final = self.verdep.pop(0)
@@ -122,6 +121,7 @@ class AStart(FrameWork):
                     if vecino in self.verdep:
                         print("Se encontró el camino.", vecino)
                         break
+                    
                     else: 
                         # Computar el valor de g y el valor h para el vecino.
                         g = self.manhattan(vecino, final)
@@ -130,7 +130,8 @@ class AStart(FrameWork):
                         # Obtener el valor de f.
                         self.f = g + h
 
-                        #print("Resultado: ", f)
+                        #print("Resultado: ", self.f)
+                
                     
                     # Si un nodo con el mismo valor de f está en la lista abierta, pero con un valor de g mayor, reemplazarlo con el nuevo nodo.
                     if self.f in self.open_list:
