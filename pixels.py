@@ -1,5 +1,6 @@
 import Breath as br # Importando el módulo Breath.py
 import Depth as dp # Importando el módulo Depth.py
+import AStar as ast # Importando el módulo AStar.py
 
 class Pixels(object): 
     def __init__(self, matriz):
@@ -219,5 +220,6 @@ class Pixels(object):
             
         #print("Camino: ", self.camino_i)
 
-        br.Breath(self.matriz, self.posiciones_blancos, self.posiciones_rojos, self.posiciones_negros, self.posiciones_verdes, self.colores_verdes, self.colores_blancos, self.colores_rojos, self.colores_negros)
-        dp.Depth(self.matriz, self.posiciones_blancos, self.posiciones_rojos, self.posiciones_negros, self.posiciones_verdes, self.colores_verdes, self.colores_blancos, self.colores_rojos, self.colores_negros)
+        #br.Breath(self.matriz, self.posiciones_blancos, self.posiciones_rojos, self.posiciones_negros, self.posiciones_verdes, self.colores_verdes, self.colores_blancos, self.colores_rojos, self.colores_negros)
+        #dp.Depth(self.matriz, self.posiciones_blancos, self.posiciones_rojos, self.posiciones_negros, self.posiciones_verdes, self.colores_verdes, self.colores_blancos, self.colores_rojos, self.colores_negros)
+        ast.AStart(self.matriz, self.posiciones_blancos, self.posiciones_rojos, self.posiciones_negros, self.posiciones_verdes, self.colores_verdes, self.colores_blancos, self.colores_rojos, self.colores_negros)
