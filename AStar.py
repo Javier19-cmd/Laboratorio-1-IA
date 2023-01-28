@@ -23,16 +23,20 @@ class AStart(FrameWork):
             self.open_list = set() # Lista para guardar los nodos visitados, pero que los vecinos no se han inspeccionado aún.
             self.closed_list = set() # Lista para guardar los nodos visitados.
 
+            self.f = 0 # Valor de f.
+
             self.algoritmo() # Llamando al algoritmo.
 
-        def manhattan(self, s): # Heurística de ruta máxima.
-            final = self.verdep.pop(0) # Obteniendo el nodo final.
+        def manhattan(self, s, final): # Heurística de ruta máxima.
+            #final = self.verdep.pop(0) # Obteniendo el nodo final.
             x, y = s # Obteniendo los valores de s.
 
-            return max(abs(x - final[0]), abs(y - final[1]))
+            f = abs(x - final[0]) + abs(y - final[1]) # Calculando la distancia de manhattan.
 
-        def euClides(self, s): # Heuristica de euclides.
-            final = self.verdep.pop(0)
+            return f
+
+        def euClides(self, s, final): # Heuristica de euclides.
+            #final = self.verdep.pop(0) # Obteniendo el nodo final.
             x, y = s
 
             h = sqrt((x - final[0])**2 + (y - final[1])**2)
@@ -69,14 +73,20 @@ class AStart(FrameWork):
             if a in self.negrop:
                 return False
 
-        def cost(self, s, a, s2): # Método cost.
-            pass
+        def distancia(self, s, s2): # Método para calcular la distancia entre dos puntos.
+            x, y = s
+            x2, y2 = s2
+
+            return sqrt((x - x2)**2 + (y - y2)**2)
 
 
         def algoritmo(self):
             # Obteniendo el nodo inicial.
             ini = self.rojop.pop(0)
             col = self.rojo.pop(0)
+
+            # Obteniendo el nodo final.
+            final = self.verdep.pop(0)
 
             self.open_list.add(ini) # Agregando el nodo inicial a la lista de nodos visitados.
 
@@ -109,4 +119,35 @@ class AStart(FrameWork):
                     if vecino not in self.open_list: # Verificando que el vecino no esté en la lista abierta.
                         self.open_list.add(vecino)
 
-                    print(vecino)
+                    if vecino in self.verdep:
+                        print("Se encontró el camino.", vecino)
+                        break
+                    else: 
+                        # Computar el valor de g y el valor h para el vecino.
+                        g = self.manhattan(vecino, final)
+                        h = self.euClides(vecino, final)
+
+                        # Obtener el valor de f.
+                        self.f = g + h
+
+                        #print("Resultado: ", f)
+                    
+                    # Si un nodo con el mismo valor de f está en la lista abierta, pero con un valor de g mayor, reemplazarlo con el nuevo nodo.
+                    if self.f in self.open_list:
+                        if g > self.f:
+                            self.open_list.remove(self.f)
+                            self.open_list.add(vecino)
+
+                    # Si un nodo con el mismo valor de f está en la lista cerrada, pero con un valor de g mayor, reemplazarlo con el nuevo nodo.
+                    if self.f in self.closed_list:
+                        if g > self.f:
+                            self.closed_list.remove(self.f)
+                            self.closed_list.add(vecino)
+                
+                # Guardando el valor en la lista cerrada.
+                self.closed_list.add(valor)
+
+            # Ordenando la lista cerrada.
+            self.closed_list = sorted(self.closed_list, key=lambda s: s[1])
+            
+            #print(self.closed_list)
