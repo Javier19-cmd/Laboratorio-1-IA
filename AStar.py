@@ -1,6 +1,7 @@
 """
 Nombre: Javier Valle
 Carnet: 20159
+Referencia: https://www.geeksforgeeks.org/a-search-algorithm/
 """
 from frame import * # Importando el módulo frame.py
 from math import sqrt
@@ -81,6 +82,7 @@ class AStart(FrameWork):
 
 
         def algoritmo(self):
+            
             # Obteniendo el nodo inicial.
             ini = self.rojop.pop(0)
 
@@ -119,8 +121,9 @@ class AStart(FrameWork):
                         self.open_list.add(vecino)
 
                     if vecino in self.verdep:
-                        print("Se encontró el camino.", vecino)
-                        break
+                        print("Finalizado.", vecino)
+                        print("Valor de f: ", self.f)
+                        return False
                     
                     else: 
                         # Computar el valor de g y el valor h para el vecino.

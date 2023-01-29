@@ -113,7 +113,7 @@ class Depth(FrameWork):
                 sacar = self.cola.pop(0)
                 #print("Sacando: ", sacar)
                 
-                if self.goalTest(sacar): # Verificando si el nodo es el objetivo. 
+                if self.goalTest(sacar): # Verificando si el nodo es el objetivo.
                     return sacar 
                 acciones = self.action(sacar)
                 
