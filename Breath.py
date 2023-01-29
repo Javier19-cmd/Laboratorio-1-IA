@@ -4,6 +4,8 @@ Referencia: https://www.youtube.com/watch?v=hettiSrJjM4&ab_channel=TechWithTim
 
 from frame import * # Importando el módulo frame.py
 import queue # Importando la librería queue para el algoritmo.
+import cv2 # Importando la librería cv2 para pintar la solución.
+from PIL import Image # Importando la librería PIL para pintar la solución.
 class Breath(FrameWork): 
     def __init__(self, matriz, blanco_pos, rojo_pos, negro_pos, verde_pos, verde, blanco, rojo, negro): # Recibiendo las listas de pixeles.
         self.matriz = matriz
@@ -17,8 +19,13 @@ class Breath(FrameWork):
         self.negro = negro
         self.visitas = [] # Lista para guardar los nodos visitados.
         self.cola = [] # Cola para guardar los nodos visitados.
+        
+        # Sacando el ancho y el alto de la matriz original.
+        self.width = len(self.matriz[0])
+        self.height = len(self.matriz)
 
         self.Algoritmo() # Llamando al algoritmo.
+        self.pintarSol() # Llamando al método para pintar la solución.
 
     # Método action.
     def action(self, s):
@@ -138,3 +145,20 @@ class Breath(FrameWork):
             #print("Sacando: ", sacar)
             self.visitas.sort()
             #print("Visitas: ", self.visitas)
+    
+    def pintarSol(self): # Pintando los pixeles visitados.
+        
+        imagen = Image.open("res.bmp") # Abriendo la imagen.
+        imagen = imagen.convert("RGB") # Convirtiendo la imagen a RGB.
+
+        pixeles = imagen.load() # Cargando los pixeles de la imagen.
+
+        width, height = imagen.size # Obteniendo el tamaño de la imagen.
+
+        # Reemplazando los pixeles visitados por pixeles azules para mostrar el camino.
+        for i in range(width):
+            for j in range(height):
+                if (i, j) in self.visitas:
+                    pixeles[i, j] = (0, 0, 255)
+        
+        imagen.save("Breath.bmp") # Guardando la imagen.

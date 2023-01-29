@@ -1,5 +1,5 @@
 from frame import * # Importando el módulo frame.py
-import queue # Importando la librería queue para el algoritmo.
+from PIL import Image # Importando la librería PIL para pintar la solución.
 class Depth(FrameWork): 
     def __init__(self, matriz, blanco_pos, rojo_pos, negro_pos, verde_pos, verde, blanco, rojo, negro): # Recibiendo las listas de pixeles.
         self.matriz = matriz
@@ -15,6 +15,7 @@ class Depth(FrameWork):
         self.visitas = set() # Lista para guardar los nodos visitados.
 
         self.Algoritmo() # Llamando al algoritmo.
+        self.pintarSol() # Llamando al método para pintar la solución.
 
     # Método action.
     def action(self, s):
@@ -137,3 +138,21 @@ class Depth(FrameWork):
             # Ordenando el set de visitas.
             sorted(self.visitas)
             #print("Visitas: ", self.visitas)
+
+
+    def pintarSol(self): # Pintando los pixeles visitados.
+        
+        imagen = Image.open("res.bmp") # Abriendo la imagen.
+        imagen = imagen.convert("RGB") # Convirtiendo la imagen a RGB.
+
+        pixeles = imagen.load() # Cargando los pixeles de la imagen.
+
+        width, height = imagen.size # Obteniendo el tamaño de la imagen.
+
+        # Reemplazando los pixeles visitados por pixeles azules para mostrar el camino.
+        for i in range(width):
+            for j in range(height):
+                if (i, j) in self.visitas:
+                    pixeles[i, j] = (0, 0, 255)
+        
+        imagen.save("Depth.bmp") # Guardando la imagen.

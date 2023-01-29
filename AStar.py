@@ -5,6 +5,7 @@ Referencia: https://www.geeksforgeeks.org/a-search-algorithm/
 """
 from frame import * # Importando el módulo frame.py
 from math import sqrt
+from PIL import Image # Importando la librería PIL para pintar la solución.
 
 class AStart(FrameWork):
         def __init__(self, matriz, blanco_pos, rojo_pos, negro_pos, verde_pos, verde, blanco, rojo, negro): # Recibiendo las listas de pixeles.
@@ -27,6 +28,7 @@ class AStart(FrameWork):
             self.f = 0 # Valor de f.
 
             self.algoritmo() # Llamando al algoritmo.
+            self.pintarSol() # Pintando la solución.
 
         def manhattan(self, s, final): # Heurística de ruta máxima.
             #final = self.verdep.pop(0) # Obteniendo el nodo final.
@@ -155,3 +157,20 @@ class AStart(FrameWork):
             self.closed_list = sorted(self.closed_list, key=lambda s: s[1])
             
             #print(self.closed_list)
+
+        def pintarSol(self): # Pintando los pixeles visitados.
+            
+            imagen = Image.open("res.bmp") # Abriendo la imagen.
+            imagen = imagen.convert("RGB") # Convirtiendo la imagen a RGB.
+
+            pixeles = imagen.load() # Cargando los pixeles de la imagen.
+
+            width, height = imagen.size # Obteniendo el tamaño de la imagen.
+
+            # Reemplazando los pixeles visitados por pixeles azules para mostrar el camino.
+            for i in range(width):
+                for j in range(height):
+                    if (i, j) in self.closed_list:
+                        pixeles[i, j] = (0, 0, 255)
+            
+            imagen.save("AS.bmp") # Guardando la imagen.
